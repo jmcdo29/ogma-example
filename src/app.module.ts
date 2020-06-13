@@ -3,6 +3,8 @@ import { OgmaModule } from '@ogma/nestjs-module';
 import { ExpressParser } from '@ogma/platform-express';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { APP_FILTER } from '@nestjs/core';
+import { ExceptionFilter } from './exception.filter';
 
 @Module({
   imports: [
@@ -15,9 +17,15 @@ import { AppService } from './app.service';
       interceptor: {
         http: ExpressParser,
       },
-    }),    
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_FILTER,
+      useClass: ExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}
